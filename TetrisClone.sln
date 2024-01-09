@@ -3,11 +3,35 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34309.116
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Engine", "Engine\Engine.shproj", "{A0CDBD0E-3A41-42B7-9425-A838BC2C7383}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameCode", "GameCode\GameCode.csproj", "{E1B21D8E-53AF-4F05-A7FD-EF4720AE8DE9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Platform.OpenGL", "Platform.OpenGL\Platform.OpenGL.csproj", "{47D0F5E5-BC04-47E1-9283-57809824F5DC}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E1B21D8E-53AF-4F05-A7FD-EF4720AE8DE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E1B21D8E-53AF-4F05-A7FD-EF4720AE8DE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E1B21D8E-53AF-4F05-A7FD-EF4720AE8DE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E1B21D8E-53AF-4F05-A7FD-EF4720AE8DE9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47D0F5E5-BC04-47E1-9283-57809824F5DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47D0F5E5-BC04-47E1-9283-57809824F5DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47D0F5E5-BC04-47E1-9283-57809824F5DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47D0F5E5-BC04-47E1-9283-57809824F5DC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2B202645-D9ED-4607-A614-5F0DD83CB8C8}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Engine\Engine.projitems*{a0cdbd0e-3a41-42b7-9425-a838bc2c7383}*SharedItemsImports = 13
+		Engine\Engine.projitems*{e1b21d8e-53af-4f05-a7fd-ef4720ae8de9}*SharedItemsImports = 5
 	EndGlobalSection
 EndGlobal

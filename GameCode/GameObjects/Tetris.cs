@@ -258,24 +258,27 @@ public class Tetris
 
     public void Update(float dt, KeyboardStateExtended keyState, MouseStateExtended mouseState)
     {
+        var nextX = CurrentPieceX;
+        var nextY = CurrentPieceY;
+        var nextRotation = CurrentPieceRotation;
 
         if (keyState.WasKeyJustDown(Keys.Left))
         {
-            CurrentPieceX--;
+            nextX--;
         }
         if (keyState.WasKeyJustDown(Keys.Right))
         {
-            CurrentPieceX++;
+            nextX++;
         }
         if (keyState.WasKeyJustDown(Keys.Down))
         {
-            CurrentPieceY++;
+            nextY++;
         }
         if (keyState.WasKeyJustDown(Keys.Up))
         {
-            CurrentPieceRotation++;
-            if (CurrentPieceRotation > 3)
-                CurrentPieceRotation = 0;
+            nextRotation++;
+            if (nextRotation > 3)
+                nextRotation = 0;
         }
 
         moveTimer += dt;
@@ -286,36 +289,48 @@ public class Tetris
             moveTimer = 0f;
             if (keyState.IsKeyDown(Keys.Left))
             {
-                CurrentPieceX--;
+                nextX--;
             }
             if (keyState.IsKeyDown(Keys.Right))
             {
-                CurrentPieceX++;
+                nextX++;
             }
             if (keyState.IsKeyDown(Keys.Down))
             {
-                CurrentPieceY++;
+                nextY++;
             }
         }
 
         if (stepTimer >= StepSpeed)
         {
             stepTimer = 0f;
-            CurrentPieceY++;
+            nextY++;
         }
 
-        if (CurrentPieceX < 1)
-            CurrentPieceX = 1;
 
-        if (CurrentPieceX > 8)
-            CurrentPieceX = 8;
+        var (x, y, rot) = GetNextState(nextX, nextY, nextRotation);
+        CurrentPieceX = x;
+        CurrentPieceY = y;
+        CurrentPieceRotation = rot;
+    }
 
-        if (CurrentPieceY > 19)
-            CurrentPieceY = 19;
+    public (int x, int y, int rot) GetNextState(int nextX, int nextY, int nextRotation)
+    {
+        var currentPiece = Pieces[CurrentPieceType][nextRotation];
+        var result = (x: nextX, y: nextY, rot: nextRotation);
 
-        if (CurrentPieceY < 0)
-            CurrentPieceY = 0;
+        //check if in bounds
+        if (nextX < 0)
+            result.x = 0;
+        if (nextX + currentPiece.GetLength(0) > 10)
+            result.x = 10 - currentPiece.GetLength(0);
+        if (nextY < 0)
+            result.y = 0;
+        if (nextY + currentPiece.GetLength(1) > 20)
+            result.y = 20 - currentPiece.GetLength(1);
 
+
+        return result;
     }
 
     public void Draw(SpriteBatch sb)
@@ -338,7 +353,7 @@ public class Tetris
             for (int y = 0; y < currentPiece.GetLength(1); y++)
             {
                 if (currentPiece[y, x] == 1)
-                    sb.Draw(tileTexture, new Rectangle(new Point(((x + CurrentPieceX) * 32) + xOffset, (y + CurrentPieceY) * 32), new Point(32, 32)), currentPieceColor);
+                    sb.Draw(tileTexture, new Rectangle(new Point(((x + CurrentPieceX + 1) * 32) + xOffset, (y + CurrentPieceY) * 32), new Point(32, 32)), currentPieceColor);
             }
         }
     }

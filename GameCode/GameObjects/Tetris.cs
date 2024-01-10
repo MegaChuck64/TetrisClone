@@ -5,10 +5,6 @@ using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended.Input;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GameCode.GameObjects;
 
@@ -26,7 +22,11 @@ public class Tetris
 
     //Time = (0.8-((Level-1)*0.007))(Level-1)
     public float StepSpeed { get; set; } = 1f;
+    public float MoveSpeed { get; set; } = 0.1f;
+
+    private float moveTimer = 0f;
     private float stepTimer = 0f;
+    private int xOffset;
 
     private Texture2D tileTexture;
 
@@ -97,8 +97,9 @@ public class Tetris
     };
 
 
-    public Tetris(BaseGame game)
+    public Tetris(BaseGame game, int xoffset)
     {
+        xOffset = xoffset;
         CurrentPiece = GetRandomPiece();
         NextPiece = GetRandomPiece();
 
@@ -107,30 +108,58 @@ public class Tetris
 
     public void Update(float dt, KeyboardStateExtended keyState, MouseStateExtended mouseState)
     {
-        if (keyState.IsKeyDown(Keys.Left))
+
+        if (keyState.WasKeyJustDown(Keys.Left))
         {
             CurrentPieceX--;
         }
-        if (keyState.IsKeyDown(Keys.Right))
+        if (keyState.WasKeyJustDown(Keys.Right))
         {
             CurrentPieceX++;
         }
-        if (keyState.IsKeyDown(Keys.Down))
+        if (keyState.WasKeyJustDown(Keys.Down))
         {
             CurrentPieceY++;
         }
-        if (keyState.IsKeyDown(Keys.Up))
-        {
-            //rotate
-        }
 
+        moveTimer += dt;
         stepTimer += dt;
+
+        if (moveTimer >= MoveSpeed)
+        {
+            moveTimer = 0f;
+            if (keyState.IsKeyDown(Keys.Left))
+            {
+                CurrentPieceX--;
+            }
+            if (keyState.IsKeyDown(Keys.Right))
+            {
+                CurrentPieceX++;
+            }
+            if (keyState.IsKeyDown(Keys.Down))
+            {
+                CurrentPieceY++;
+            }
+        }
 
         if (stepTimer >= StepSpeed)
         {
             stepTimer = 0f;
             CurrentPieceY++;
         }
+
+        if (CurrentPieceX < 0)
+            CurrentPieceX = 0;
+
+        if (CurrentPieceX > 6)
+            CurrentPieceX = 6;
+
+        if (CurrentPieceY > 16)
+            CurrentPieceY = 16;
+
+        if (CurrentPieceY < 0)
+            CurrentPieceY = 0;
+
     }
 
     public void Draw(SpriteBatch sb)
@@ -141,7 +170,7 @@ public class Tetris
             {
                 if (Board[x, y] == 1)
                 {
-                    sb.Draw(tileTexture, new Rectangle(new Point(x * 32, y * 32), new Point(32, 32)), Color.White);
+                    sb.Draw(tileTexture, new Rectangle(new Point((x * 32) + xOffset, y * 32), new Point(32, 32)), Color.White);
                 }
             }
         }
@@ -150,7 +179,7 @@ public class Tetris
             for (int y = 0; y < 4; y++)
             {
                 if (CurrentPiece[x, y] == 1)
-                    sb.Draw(tileTexture, new Rectangle(new Point((x + CurrentPieceX) * 32, (y + CurrentPieceY) * 32), new Point(32, 32)), Color.White);
+                    sb.Draw(tileTexture, new Rectangle(new Point(((x + CurrentPieceX) * 32) + xOffset, (y + CurrentPieceY) * 32), new Point(32, 32)), Color.White);
             }
         }
     }

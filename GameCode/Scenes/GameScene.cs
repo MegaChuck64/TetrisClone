@@ -33,7 +33,7 @@ public class GameScene : Scene
     {
         sb = new SpriteBatch(Game.GraphicsDevice);
         tileTexture = Game.Content.Load<Texture2D>(@"sprites\tile");
-        tetris = new Tetris(Game);
+        tetris = new Tetris(Game, offsetX);
     }
 
     public override void Update(float dt, KeyboardStateExtended keyState, MouseStateExtended mouseState)

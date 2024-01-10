@@ -11,9 +11,9 @@ namespace GameCode.GameObjects;
 public class Tetris
 {
     public int[,] Board { get; set; } = new int[10, 20];
-    public int[,] CurrentPiece { get; set; } = new int[4, 4];
-    public int[,] NextPiece { get; set; } = new int[4, 4];
-
+    public int CurrentPieceType { get; set; } = 0;
+    public int NextPieceType { get; set; } = 0;
+    public int CurrentPieceRotation { get; set; } = 0;
     public int CurrentPieceX { get; set; } = 3;
     public int CurrentPieceY { get; set; } = 0;
 
@@ -250,8 +250,8 @@ public class Tetris
     public Tetris(BaseGame game, int xoffset)
     {
         xOffset = xoffset;
-        CurrentPiece = GetRandomPiece();
-        NextPiece = GetRandomPiece();
+        CurrentPieceType = GetRandomPiece();
+        NextPieceType = GetRandomPiece();
 
         tileTexture = game.Content.Load<Texture2D>(@"sprites\tile");
     }
@@ -270,6 +270,12 @@ public class Tetris
         if (keyState.WasKeyJustDown(Keys.Down))
         {
             CurrentPieceY++;
+        }
+        if (keyState.WasKeyJustDown(Keys.Up))
+        {
+            CurrentPieceRotation++;
+            if (CurrentPieceRotation > 3)
+                CurrentPieceRotation = 0;
         }
 
         moveTimer += dt;
@@ -324,24 +330,24 @@ public class Tetris
                 }
             }
         }
-        for (int x = 0; x < CurrentPiece.GetLength(0); x++)
+
+        var currentPiece = Pieces[CurrentPieceType][CurrentPieceRotation];
+        for (int x = 0; x < currentPiece.GetLength(0); x++)
         {
-            for (int y = 0; y < CurrentPiece.GetLength(1); y++)
+            for (int y = 0; y < currentPiece.GetLength(1); y++)
             {
-                if (CurrentPiece[y, x] == 1)
+                if (currentPiece[y, x] == 1)
                     sb.Draw(tileTexture, new Rectangle(new Point(((x + CurrentPieceX) * 32) + xOffset, (y + CurrentPieceY) * 32), new Point(32, 32)), Color.White);
             }
         }
     }
 
-    public int[,] GetRandomPiece()
+    public int GetRandomPiece()
     {
         var random = new Random();
         var choice = random.Next(0, 7);
 
-        var piece = Pieces[choice];
-
-        return piece[0];
+        return choice;
     }
 
 }

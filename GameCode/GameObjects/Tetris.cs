@@ -332,16 +332,36 @@ public class Tetris
         }
 
         var currentPiece = Pieces[CurrentPieceType][CurrentPieceRotation];
+        var currentPieceColor = GetBlockColor();
         for (int x = 0; x < currentPiece.GetLength(0); x++)
         {
             for (int y = 0; y < currentPiece.GetLength(1); y++)
             {
                 if (currentPiece[y, x] == 1)
-                    sb.Draw(tileTexture, new Rectangle(new Point(((x + CurrentPieceX) * 32) + xOffset, (y + CurrentPieceY) * 32), new Point(32, 32)), Color.White);
+                    sb.Draw(tileTexture, new Rectangle(new Point(((x + CurrentPieceX) * 32) + xOffset, (y + CurrentPieceY) * 32), new Point(32, 32)), currentPieceColor);
             }
         }
     }
 
+    public Color GetBlockColor()
+    {
+        if (CurrentPieceType == 0)
+            return Color.Cyan;
+        if (CurrentPieceType == 1)
+            return Color.Blue;
+        if (CurrentPieceType == 2)
+            return Color.Orange;
+        if (CurrentPieceType == 3)
+            return Color.Yellow;
+        if (CurrentPieceType == 4)
+            return Color.Green;
+        if (CurrentPieceType == 5)
+            return Color.Purple;
+        if (CurrentPieceType == 6)
+            return Color.Red;
+
+        return Color.White;
+    }
     public int GetRandomPiece()
     {
         var random = new Random();

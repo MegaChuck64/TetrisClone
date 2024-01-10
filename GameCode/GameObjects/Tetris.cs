@@ -318,14 +318,14 @@ public class Tetris
             CurrentPieceY++;
         }
 
-        if (CurrentPieceX < 0)
-            CurrentPieceX = 0;
+        if (CurrentPieceX < 1)
+            CurrentPieceX = 1;
 
-        if (CurrentPieceX > 6)
-            CurrentPieceX = 6;
+        if (CurrentPieceX > 8)
+            CurrentPieceX = 8;
 
-        if (CurrentPieceY > 16)
-            CurrentPieceY = 16;
+        if (CurrentPieceY > 19)
+            CurrentPieceY = 19;
 
         if (CurrentPieceY < 0)
             CurrentPieceY = 0;

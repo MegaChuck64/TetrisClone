@@ -1,0 +1,10 @@
+1. make pieces that drop and collect at bottom one after another
+2. move the pieces back and forth as it slowly drops
+3. clear the pieces when they fill up a row
+4. make decision about going into juice/audio, if not go to rotate
+---------------------------------------------
+5. make the pieces rotate https://tetris.fandom.com/wiki/SRS
+6. make the pieces drop faster as time goes on
+7. make the pieces drop faster when you press down
+9. scoring system
+10. progression system

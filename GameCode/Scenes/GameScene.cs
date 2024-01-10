@@ -1,4 +1,5 @@
 ﻿using Engine;
+using GameCode.GameObjects;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.Input;
@@ -13,6 +14,7 @@ public class GameScene : Scene
     private SpriteBatch sb;
     private Texture2D tileTexture;
     private int offsetX = 6 * 32;
+    private Tetris tetris;
     public GameScene(BaseGame game) : base(game)
     {
         for (int x = 0; x < 12; x++)
@@ -31,10 +33,12 @@ public class GameScene : Scene
     {
         sb = new SpriteBatch(Game.GraphicsDevice);
         tileTexture = Game.Content.Load<Texture2D>(@"sprites\tile");
+        tetris = new Tetris(Game);
     }
 
     public override void Update(float dt, KeyboardStateExtended keyState, MouseStateExtended mouseState)
     {
+        tetris.Update(dt, keyState, mouseState);
     }
 
     public override void Draw(float dt)
@@ -45,6 +49,7 @@ public class GameScene : Scene
         {
             tile.Draw(sb, tileTexture, offsetX, borderTint);
         }
+        tetris.Draw(sb);
         sb.End();
     }
 }

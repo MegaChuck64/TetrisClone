@@ -47,7 +47,7 @@ public class GameScene : Scene
         sb.Begin();
         foreach (var tile in bordertiles)
         {
-            tile.Draw(sb, tileTexture, offsetX, borderTint);
+           // tile.Draw(sb, tileTexture, offsetX, borderTint);
         }
         tetris.Draw(sb);
         sb.End();

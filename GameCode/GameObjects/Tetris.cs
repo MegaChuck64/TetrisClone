@@ -10,7 +10,7 @@ namespace GameCode.GameObjects;
 
 public class Tetris
 {
-    public int[,] Board { get; set; } = new int[10, 20];
+    public int[,] Board { get; set; } = new int[12, 22];
     public int CurrentPieceType { get; set; } = 0;
     public int NextPieceType { get; set; } = 0;
     public int CurrentPieceRotation { get; set; } = 0;
@@ -254,6 +254,18 @@ public class Tetris
         NextPieceType = GetRandomPiece();
 
         tileTexture = game.Content.Load<Texture2D>(@"sprites\tile");
+
+
+        //init board
+        for (int x = 0; x < Board.GetLength(0); x++)
+        {
+            for (int y = 0; y < Board.GetLength(1); y++)
+            {
+                if (x == 0 || x == Board.GetLength(0) - 1 || y == Board.GetLength(1) - 1 || y == 0)
+                    Board[x, y] = 1;
+            }
+        }
+
     }
 
     public void Update(float dt, KeyboardStateExtended keyState, MouseStateExtended mouseState)
@@ -320,25 +332,81 @@ public class Tetris
         var result = (x: nextX, y: nextY, rot: nextRotation);
 
         //check if in bounds
-        if (nextX < 0)
-            result.x = 0;
-        if (nextX + currentPiece.GetLength(0) > 10)
-            result.x = 10 - currentPiece.GetLength(0);
-        if (nextY < 0)
-            result.y = 0;
-        if (nextY + currentPiece.GetLength(1) > 20)
-            result.y = 20 - currentPiece.GetLength(1);
+        var rect = GetSmallestRect(nextX, nextY, currentPiece);
+        if (rect.X < 1)
+            result.x = 1;
+        if (rect.X + rect.Width > Board.GetLength(0) - 2)
+            result.x = Board.GetLength(0) - 2 - rect.Width;
+        if (rect.Y + rect.Height > Board.GetLength(1) - 2)
+            result.y = Board.GetLength(1) - 2 - rect.Height;
+        if (rect.Y < 1)
+            result.y = 1;
 
+        //check if can move
+        if (!CanMoveTo(result.x, result.y, currentPiece, Board))
+        {
+            result.x = CurrentPieceX;
+            result.y = CurrentPieceY;
+        }
 
         return result;
     }
 
+    public bool CanMoveTo(int x, int y, int[,] piece, int[,] board)
+    {
+        var result = true;
+
+        for (int i = 0; i < piece.GetLength(0); i++)
+        {
+            for (int j = 0; j < piece.GetLength(1); j++)
+            {
+                if (piece[i, j] == 1)
+                {
+                    if (board[x + i, y + j] == 1)
+                        result = false;
+                }
+            }
+        }
+
+        return result;
+    }
+
+    public Rectangle GetSmallestRect(int x, int y, int[,] piece)
+    {
+        var rect = new Rectangle(x, y, 0, 0);
+
+        var width = 0;
+        var height = 0;
+        for (int i = 0; i < piece.GetLength(0); i++)
+        {
+            for (int j = 0; j < piece.GetLength(1); j++)
+            {
+                if (piece[i, j] == 1)
+                {
+                    if (i > width)
+                        width = i;
+                    if (j > height)
+                        height = j;
+                }
+            }
+        }
+
+        rect.Width = width;
+        rect.Height = height;
+
+        return rect;
+    }
+
+
     public void Draw(SpriteBatch sb)
     {
-        for (int x = 0; x < 10; x++)
+        
+        for (int y = 0; y < Board.GetLength(1); y++)
         {
-            for (int y = 0; y < 20; y++)
+            for (int x = 0; x < Board.GetLength(0); x++)
             {
+                //draw current piece                
+
                 if (Board[x, y] == 1)
                 {
                     sb.Draw(tileTexture, new Rectangle(new Point((x * 32) + xOffset, y * 32), new Point(32, 32)), Color.White);
@@ -348,14 +416,21 @@ public class Tetris
 
         var currentPiece = Pieces[CurrentPieceType][CurrentPieceRotation];
         var currentPieceColor = GetBlockColor();
-        for (int x = 0; x < currentPiece.GetLength(0); x++)
-        {
+
+
             for (int y = 0; y < currentPiece.GetLength(1); y++)
             {
-                if (currentPiece[y, x] == 1)
-                    sb.Draw(tileTexture, new Rectangle(new Point(((x + CurrentPieceX + 1) * 32) + xOffset, (y + CurrentPieceY) * 32), new Point(32, 32)), currentPieceColor);
+                for (int x = 0; x < currentPiece.GetLength(0); x++)
+                {
+                    if (currentPiece[x, y] == 1)
+                    {
+                        sb.Draw(tileTexture, new Rectangle(new Point(((x + CurrentPieceX) * 32) + xOffset, (y + CurrentPieceY) * 32), new Point(32, 32)), currentPieceColor);
+                    }
+                }
             }
-        }
+        
+
+
     }
 
     public Color GetBlockColor()

@@ -308,7 +308,7 @@ public class Tetris
         var result = (x: nextX, y: nextY, rot: nextRotation);
 
         //check if in bounds
-        var rect = GetSmallestRect(nextX, nextY, currentPiece);
+        var rect = new Rectangle(nextX, nextY, currentPiece.GetLength(0), currentPiece.GetLength(1));//(nextX, nextY, currentPiece);
         if (rect.X < 1)
             result.x = 1;
         if (rect.X + rect.Width > Board.GetLength(0) - 2)
@@ -332,9 +332,9 @@ public class Tetris
     {
         var result = true;
 
-        for (int i = 0; i < piece.GetLength(0); i++)
+        for (int j = 0; j < piece.GetLength(1); j++)
         {
-            for (int j = 0; j < piece.GetLength(1); j++)
+            for (int i = 0; i < piece.GetLength(0); i++)
             {
                 if (piece[i, j] == 1)
                 {
